@@ -1,0 +1,18 @@
+# .NET
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Visual Studio Code
+.vscode/
+
+# Mac 系統檔案
+.DS_Store
+
+# 其他常見忽略
+*.log
+*.tmp
+*.bak
