@@ -27,9 +27,12 @@ namespace LIS_Middleware
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // 註冊 LISContext，連線字串從 appsettings.json 讀取
-            services.AddDbContext<LISContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("LISConnection")));
+            // 註冊 Supabase Client
+            var supabaseUrl = Configuration["Supabase:Url"];
+            var supabaseKey = Configuration["Supabase:ApiKey"];
+            var supabaseClient = new Supabase.Client(supabaseUrl, supabaseKey);
+            supabaseClient.InitializeAsync().Wait();
+            services.AddSingleton(supabaseClient);
             services.AddControllers();
         }
 
