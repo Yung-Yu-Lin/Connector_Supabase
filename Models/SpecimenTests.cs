@@ -142,5 +142,11 @@ namespace LIS_Middleware.Models
         
         [Column("is_highly_abnormal")]
         public bool? is_highly_abnormal { get; set; }
+
+        [Column("rack_number")]
+        public string rack_number { get; set; }
+
+        [Column("cup_number")]
+        public string cup_number { get; set; }
     }
 }

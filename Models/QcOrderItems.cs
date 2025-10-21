@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 namespace LIS_Middleware.Models
 {
-    public class OrderItems
+    public class QcOrderItems
     {
         public string BarCode { get; set; }
         public string ItemsCode { get; set; }
@@ -11,5 +11,7 @@ namespace LIS_Middleware.Models
         public string InstrumentID { get; set; }
         public string RackNumber { get; set; }
         public string CupNumber { get; set; }
+        public string Level { get; set; }
+        public string Cuvette { get; set; }
     }
 }

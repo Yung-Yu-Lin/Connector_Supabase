@@ -10,5 +10,7 @@ namespace LIS_Middleware.Models
         public int PatientGender { get; set; }
         public string ItemsCode { get; set; }
         public string ItemsName { get; set; }
+        public string ItemsType { get; set; }
+        public string InstrumentID { get; set; }
     }
 }
