@@ -229,7 +229,23 @@ namespace LIS_Middleware.Controllers
                 return NotFound(response);
             }
 
-            specimenTest.result_value = orderItems.ItemsResult;
+            // 若是 WBC 且結果為數值，乘以 100
+            if (itemsCode == "WBC")
+            {
+                decimal wbcValue;
+                if (decimal.TryParse(orderItems.ItemsResult, out wbcValue))
+                {
+                    specimenTest.result_value = (wbcValue * 100).ToString();
+                }
+                else
+                {
+                    specimenTest.result_value = orderItems.ItemsResult;
+                }
+            }
+            else
+            {
+                specimenTest.result_value = orderItems.ItemsResult;
+            }
             specimenTest.result_date = DateTime.Now;
             specimenTest.Flag = orderItems.ItemsFlag;
             specimenTest.status = "completed"; // 預設更新為 completed
