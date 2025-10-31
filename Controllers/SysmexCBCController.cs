@@ -229,13 +229,13 @@ namespace LIS_Middleware.Controllers
                 return NotFound(response);
             }
 
-            // 若是 WBC 且結果為數值，乘以 100
-            if (itemsCode == "WBC")
+            // 若是 WBC 且結果為數值，乘以 1000
+            if (itemsCode == "W.B.C")
             {
                 decimal wbcValue;
                 if (decimal.TryParse(orderItems.ItemsResult, out wbcValue))
                 {
-                    specimenTest.result_value = (wbcValue * 100).ToString();
+                    specimenTest.result_value = (wbcValue * 1000).ToString();
                 }
                 else
                 {
