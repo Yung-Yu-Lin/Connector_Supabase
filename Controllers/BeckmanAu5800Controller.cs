@@ -27,14 +27,14 @@ namespace LIS_Middleware.Controllers
         // public static string AMY = "?"; // 
         public static string ALB = "ASALB";
         public static string CRE = "CRE";
-        public static string CL = "CL";
+        // public static string CL = "CL";
         public static string P = "PHOS"; // 血清磷
-        public static string Na = "NA";
+        // public static string Na = "NA";
         public static string CA = "CALA"; // 血清鈣
-        public static string K = "K"; // 血清鉀
-        public static string LITH = "LI"; // 血清鋰
+        // public static string K = "K"; // 血清鉀
+        // public static string LITH = "LI"; // 血清鋰
         public static string GLU = "GLU"; // 飯前血糖
-        public static string RA = "RF"; // 類風濕性關節炎
+        // public static string RA = "RF"; // 類風濕性關節炎
         public static string HDLC = "HDL";
         public static string ALP04 = "ALKP";
         public static string GPT = "ALT"; // 
@@ -48,7 +48,30 @@ namespace LIS_Middleware.Controllers
         // 這裡定義的是，Supabase 裡面對應的檢驗項目代碼 (test_code) test_code 必須要在這裡面有出現才會被 select 出來
         private static readonly string[] ExamineItems = new[]
         {
-            "CRPN", "TG-1", "ASLDH", "LDL-C", "U-TP", "U-CRE", "2PBUN", "SFUA", "UALB", "BID", "CHO", "BIT", "TP", "cpk1", "ASALB", "CRE", "CL", "PHOS" ,"NA", "CALA", "K", "LI", "GLU", "RF", "HDL", "ALKP", "ALT", "AST", "GGT"
+            "CRPN",
+            "TG-1",
+            "ASLDH",
+            "LDL-C",
+            "U-TP",
+            "U-CRE",
+            "2PBUN",
+            "SFUA",
+            "UALB",
+            "BID",
+            "CHO",
+            "BIT",
+            "TP",
+            "cpk1",
+            "ASALB",
+            "CRE",
+            "PHOS",
+            "CALA",
+            "GLU",
+            "HDL",
+            "ALKP",
+            "ALT",
+            "AST",
+            "GGT"
         };
 
         // 反向字典：AU 代碼 → ItemID
@@ -64,7 +87,7 @@ namespace LIS_Middleware.Controllers
             { AU_ExamineItems.UCRE, "017" },
             { AU_ExamineItems.BUN, "013" },
             { AU_ExamineItems.UA, "014" },
-            { AU_ExamineItems.MA, "030" },
+            { AU_ExamineItems.MA, "030" }, // UALB
             { AU_ExamineItems.DBILB, "031" },
             { AU_ExamineItems.CHOL, "008" },
             { AU_ExamineItems.TBIL, "003" },
@@ -73,14 +96,14 @@ namespace LIS_Middleware.Controllers
             // { AU_ExamineItems.AMY, "005" },
             { AU_ExamineItems.ALB, "001" },
             { AU_ExamineItems.CRE, "017" },
-            { AU_ExamineItems.CL, "099" },
+            // { AU_ExamineItems.CL, "099" },
             { AU_ExamineItems.P, "021" },
-            { AU_ExamineItems.Na, "097" },
+            // { AU_ExamineItems.Na, "097" },
             { AU_ExamineItems.CA, "007" },
-            { AU_ExamineItems.K, "098" },
-            { AU_ExamineItems.LITH, "119" },
+            // { AU_ExamineItems.K, "098" },
+            // { AU_ExamineItems.LITH, "119" },
             { AU_ExamineItems.GLU, "012" },
-            { AU_ExamineItems.RA, "026" },
+            // { AU_ExamineItems.RA, "026" },
             { AU_ExamineItems.HDLC, "024" },
             { AU_ExamineItems.ALP04, "002" },
             { AU_ExamineItems.GPT, "010" },
