@@ -116,14 +116,20 @@ namespace LIS_Middleware.Controllers
                 return NotFound(response);
             }
 
+            // 查詢 status 為 pending 或 processing
             var testResult = await _supabaseClient
                 .From<SpecimenTest>()
                 .Filter("specimen_id", Postgrest.Constants.Operator.Equals, specimen.specimen_id)
-                .Filter("status", Postgrest.Constants.Operator.Equals, "pending")
-                .Filter("test_code", Postgrest.Constants.Operator.In, ExamineItems) // 只撈出符合的項目
+                .Filter("status", Postgrest.Constants.Operator.In, new[] { "pending", "processing" })
+                .Filter("test_code", Postgrest.Constants.Operator.In, ExamineItems)
                 .Get();
 
-            var ordersList = testResult.Models.Select(t => new Orders
+            // 只保留 status=pending 或 (status=processing 且 result_value=null)
+            var filteredTests = testResult.Models.Where(t =>
+                t.status == "pending" || (t.status == "processing" && string.IsNullOrEmpty(t.result_value))
+            );
+
+            var ordersList = filteredTests.Select(t => new Orders
             {
                 BarCode = barcode,
                 PatientID = specimen.specimen_id,

@@ -301,14 +301,20 @@ namespace LIS_Middleware.Controllers
 
             // 如果找到資料，則繼續
             var specimenId = specimen.specimen_id;
+
             var testResult = await _supabaseClient
                 .From<SpecimenTest>()
-                .Filter("specimen_id", Postgrest.Constants.Operator.Equals, specimenId)
-                .Filter("status", Postgrest.Constants.Operator.Equals, "pending") // 只撈出還沒被讀走的項目
-                .Filter("test_code", Postgrest.Constants.Operator.In, ExamineItems) // 只撈出符合的項目
+                .Filter("specimen_id", Postgrest.Constants.Operator.Equals, specimen.specimen_id)
+                .Filter("status", Postgrest.Constants.Operator.In, new[] { "pending", "processing" })
+                .Filter("test_code", Postgrest.Constants.Operator.In, ExamineItems)
                 .Get();
-            
-            var ordersList = testResult.Models.Select(test => new Orders
+
+            // 只保留 status=pending 或 (status=processing 且 result_value=null)
+            var filteredTests = testResult.Models.Where(t =>
+                t.status == "pending" || (t.status == "processing" && string.IsNullOrEmpty(t.result_value))
+            );
+
+            var ordersList = filteredTests.Select(test => new Orders
             {
                 BarCode = barcode,
                 PatientID = specimen.specimen_id,

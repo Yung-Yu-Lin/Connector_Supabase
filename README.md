@@ -7,3 +7,14 @@
 2. 發布檔案的位置：bin > Release > publish
 
 現代大甲 Supabase 連線API專案
+
+現代大甲 Supabase 連線API專案
+
+現代大甲 master 
+"DefaultUnitID": "5647b1bb-fd7c-44b6-b57f-b30210231dd6"
+
+現代台南 branch
+"DefaultUnitID": "56c493b8-d36d-4ba0-afbb-31f016e12ee1"
+
+杏仁台南 branch
+"DefaultUnitID": "c068f09e-fdbc-4739-b97f-df58f92ca813"
