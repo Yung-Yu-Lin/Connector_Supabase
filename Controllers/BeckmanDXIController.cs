@@ -8,97 +8,85 @@ using Microsoft.Extensions.Configuration;
 
 namespace LIS_Middleware.Controllers
 {
-    public class AU_ExamineItems
+    public class DXI_ExamineItems
     {
-        public static string CRP = "CRPN";
-        public static string TRIG = "TG-1";
-        public static string LDH27 = "ASLDH";
-        public static string LDLC = "LDL-C";
-        public static string UCSFP = "U-TP";
-        public static string UCRE = "U-CRE"; // 尿液肌酸酐
-        public static string BUN = "2PBUN";
-        public static string UA = "SFUA";
-        public static string MA = "UALB"; // 微白蛋白
-        public static string DBILB = "BID";
-        public static string CHOL = "CHO";
-        public static string TBIL = "BIT";
-        public static string TP = "TP";
-        public static string CK = "cpk1";
-        // public static string AMY = "?"; // 
-        public static string ALB = "ASALB";
-        public static string CRE = "CRE";
-        public static string CL = "CL";
-        public static string P = "PHOS"; // 血清磷
-        public static string Na = "NA";
-        public static string CA = "CALA"; // 血清鈣
-        public static string K = "K"; // 血清鉀
-        public static string LITH = "LI"; // 血清鋰
-        public static string GLU = "GLU"; // 飯前血糖
-        public static string RA = "RF"; // 類風濕性關節炎
-        public static string HDLC = "HDL";
-        public static string ALP04 = "ALKP";
-        public static string GPT = "ALT"; // 
-        public static string GOT = "AST"; // 
-        public static string GGT19 = "GGT"; // 麩胺醯轉移脢
+        public static string CA153 = "CA153";
+        public static string HCG5 = "B-HCG";
+        public static string LH = "LH";
+        public static string CA125 = "CA125";
+        public static string PSA = "PSA";
+        public static string PRL = "PRL";
+        public static string freePSA = "freePSA";
+        public static string FSH = "FSH";
+        public static string CEA = "CEA";
+        public static string TES = "TES";
+        public static string B12 = "B12";
+        public static string AFP = "AFP";
+        public static string INS2 = "INS2";
+        public static string CA199 = "CA199";
+        public static string FOL = "FOL";
+        public static string E2 = "E2";
     }
 
-    [Route("AU")]
-    public class BeckmanAu5800Controller : Controller
+    [Route("DXI")]
+    public class BeckmanDXIController : Controller
     {
         // 這裡定義的是，Supabase 裡面對應的檢驗項目代碼 (test_code) test_code 必須要在這裡面有出現才會被 select 出來
         private static readonly string[] ExamineItems = new[]
         {
-            "CRPN", "TG-1", "ASLDH", "LDL-C", "U-TP", "U-CRE", "2PBUN", "SFUA", "UALB", "BID", "CHO", "BIT", "TP", "cpk1", "ASALB", "CRE", "CL", "PHOS" ,"NA", "CALA", "K", "LI", "GLU", "RF", "HDL", "ALKP", "ALT", "AST", "GGT"
+            "CA153",
+            "B-HCG",
+            "LH",
+            "CA125",
+            "PSA",
+            "PRL",
+            "freePSA",
+            "FSH",
+            "CEA",
+            "TES",
+            "B12",
+            "AFP",
+            "INS2",
+            "CA199",
+            "FOL",
+            "E2"
         };
 
-        // 反向字典：AU 代碼 → ItemID
-        Dictionary<string, string> AUCodeToItemID => AU_ExamineItems_Dic.ToDictionary(x => x.Value, x => x.Key);
+        // 反向字典：DXI 代碼 → ItemID
+        Dictionary<string, string> DXICodeToItemID => DXI_ExamineItems_Dic.ToDictionary(x => x.Value, x => x.Key);
 
-        Dictionary<string, string> AU_ExamineItems_Dic = new Dictionary<string, string>()
+        Dictionary<string, string> DXI_ExamineItems_Dic = new Dictionary<string, string>()
         {
-            { AU_ExamineItems.CRP, "018" },
-            { AU_ExamineItems.TRIG, "009" },
-            { AU_ExamineItems.LDH27, "023" },
-            { AU_ExamineItems.LDLC, "028" },
-            { AU_ExamineItems.UCSFP, "029" },
-            { AU_ExamineItems.UCRE, "017" },
-            { AU_ExamineItems.BUN, "013" },
-            { AU_ExamineItems.UA, "014" },
-            { AU_ExamineItems.MA, "030" },
-            { AU_ExamineItems.DBILB, "031" },
-            { AU_ExamineItems.CHOL, "008" },
-            { AU_ExamineItems.TBIL, "003" },
-            { AU_ExamineItems.TP, "015" },
-            { AU_ExamineItems.CK, "016" },
-            // { AU_ExamineItems.AMY, "005" },
-            { AU_ExamineItems.ALB, "001" },
-            { AU_ExamineItems.CRE, "017" },
-            { AU_ExamineItems.CL, "099" },
-            { AU_ExamineItems.P, "021" },
-            { AU_ExamineItems.Na, "097" },
-            { AU_ExamineItems.CA, "007" },
-            { AU_ExamineItems.K, "098" },
-            { AU_ExamineItems.LITH, "119" },
-            { AU_ExamineItems.GLU, "012" },
-            { AU_ExamineItems.RA, "026" },
-            { AU_ExamineItems.HDLC, "024" },
-            { AU_ExamineItems.ALP04, "002" },
-            { AU_ExamineItems.GPT, "010" },
-            { AU_ExamineItems.GOT, "011" },
-            { AU_ExamineItems.GGT19, "020" },
+            { DXI_ExamineItems.CA153, "CA153" },
+            { DXI_ExamineItems.HCG5, "HCG5" },
+            { DXI_ExamineItems.LH, "Hlh" },
+            { DXI_ExamineItems.CA125, "OV125Ag" },
+            { DXI_ExamineItems.PSA, "PSA-Hyb" },
+            { DXI_ExamineItems.PRL, "PRL" },
+            { DXI_ExamineItems.freePSA, "freePSA" },
+            { DXI_ExamineItems.FSH, "hFSH" },
+            { DXI_ExamineItems.CEA, "CEA2" },
+            { DXI_ExamineItems.TES, "Testo" },
+            { DXI_ExamineItems.B12, "VitB12" },
+            { DXI_ExamineItems.AFP, "AFP" },
+            { DXI_ExamineItems.INS2, "Insulin" },
+            { DXI_ExamineItems.CA199, "GI19-9Ag" },
+            { DXI_ExamineItems.FOL, "FOLW" },
+            { DXI_ExamineItems.E2, "SNSE2" }
         };
 
         private readonly Supabase.Client _supabaseClient;
         private readonly IConfiguration _configuration;
 
-        public BeckmanAu5800Controller(Supabase.Client supabaseClient, IConfiguration configuration)
+        public BeckmanDXIController(Supabase.Client supabaseClient, IConfiguration configuration)
         {
             _supabaseClient = supabaseClient;
             _configuration = configuration;
         }
 
+        
         // 讀取 QC 檢體檢驗項目
-        // Get AU/getQcTargets/{instrumentId}/{barcode}
+        // Get DXI/getQcTargets/{instrumentId}/{barcode}
         [HttpGet("getQcTargets/{instrumentId}/{barcode}")]
         public async Task<IActionResult> GetQcTargets(string instrumentId, string barcode)
         {
@@ -153,7 +141,7 @@ namespace LIS_Middleware.Controllers
                 BarCode = barcode,
                 PatientID = "",
                 PatientName = "",
-                ItemsCode = AU_ExamineItems_Dic[test.qc_number], // 將項目名稱轉成儀器使用的代碼
+                ItemsCode = DXI_ExamineItems_Dic[test.qc_number], // 將項目名稱轉成儀器使用的代碼
                 ItemsName = test.qc_number,
                 ItemsType = "QC", // QC檢體
                 InstrumentID = instrumentId
@@ -177,9 +165,9 @@ namespace LIS_Middleware.Controllers
             foreach (var order in orders)
             {
                 var itemsCode = order.ItemsName;
-                if (AUCodeToItemID.ContainsKey(itemsCode))
+                if (DXICodeToItemID.ContainsKey(itemsCode))
                 {
-                    itemsCode = AUCodeToItemID[itemsCode];
+                    itemsCode = DXICodeToItemID[itemsCode];
                 }
 
                 // 先查出 QcTarget 實體
@@ -214,9 +202,9 @@ namespace LIS_Middleware.Controllers
             var defaultUnitId = _configuration["Supabase:DefaultUnitID"];
 
             var convertedItemsCode = qcItems.ItemsCode;
-            if (AUCodeToItemID.ContainsKey(qcItems.ItemsCode))
+            if (DXICodeToItemID.ContainsKey(qcItems.ItemsCode))
             {
-                convertedItemsCode = AUCodeToItemID[qcItems.ItemsCode];
+                convertedItemsCode = DXICodeToItemID[qcItems.ItemsCode];
             }
 
             var qcTargetsResult = await _supabaseClient
@@ -282,7 +270,7 @@ namespace LIS_Middleware.Controllers
 
         // ------------------
 
-        // GET AU/getItems/{barcode}
+        // GET DXI/getItems/{barcode}
         [HttpGet("getItems/{barcode}")]
         public async Task<IActionResult> GetSpecimenByBarcode(string barcode)
         {
@@ -337,7 +325,7 @@ namespace LIS_Middleware.Controllers
                 BarCode = barcode,
                 PatientID = specimen.specimen_id,
                 PatientName = specimen.patient_name,
-                ItemsCode = AU_ExamineItems_Dic[test.test_code], // 將項目名稱轉成儀器使用的代碼
+                ItemsCode = DXI_ExamineItems_Dic[test.test_code], // 將項目名稱轉成儀器使用的代碼
                 ItemsName = test.test_name,
                 ItemsType = "NORMAL", // 一般檢體
                 InstrumentID = ""
@@ -373,9 +361,9 @@ namespace LIS_Middleware.Controllers
 
                 var itemsCode = item.ItemsCode;
                 // 自動轉換：如果 ItemsCode 是 AU 代碼，轉成 ItemID
-                if (AUCodeToItemID.ContainsKey(itemsCode))
+                if (DXICodeToItemID.ContainsKey(itemsCode))
                 {
-                    itemsCode = AUCodeToItemID[itemsCode];
+                    itemsCode = DXICodeToItemID[itemsCode];
                 }
 
                 // 2. 查 SpecimenTest
@@ -465,10 +453,10 @@ namespace LIS_Middleware.Controllers
 
             var specimenId = specimen.specimen_id;
             var convertedItemsCode = orderItems.ItemsCode;
-            // 自動轉換：如果 ItemsCode 是 AU 代碼，轉成 ItemID
-            if (AUCodeToItemID.ContainsKey(orderItems.ItemsCode))
+            // 自動轉換：如果 ItemsCode 是 DXI 代碼，轉成 ItemID
+            if (DXICodeToItemID.ContainsKey(orderItems.ItemsCode))
             {
-                convertedItemsCode = AUCodeToItemID[orderItems.ItemsCode];
+                convertedItemsCode = DXICodeToItemID[orderItems.ItemsCode];
             }
 
             var testResult = await _supabaseClient
@@ -506,5 +494,6 @@ namespace LIS_Middleware.Controllers
             public int order_no { get; set; }
             public string status { get; set; }
         }
+
     }
 }
