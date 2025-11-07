@@ -10,36 +10,21 @@ namespace LIS_Middleware.Controllers
 {
     public class AU_ExamineItems
     {
-        public static string CRP = "CRPN";
-        public static string TRIG = "TG-1";
-        public static string LDH27 = "ASLDH";
-        public static string LDLC = "LDL-C";
-        public static string UCSFP = "U-TP";
-        public static string UCRE = "U-CRE"; // 尿液肌酸酐
-        public static string BUN = "2PBUN";
-        public static string UA = "SFUA";
-        public static string MA = "UALB"; // 微白蛋白
-        public static string DBILB = "BID";
-        public static string CHOL = "CHO";
-        public static string TBIL = "BIT";
         public static string TP = "TP";
-        public static string CK = "cpk1";
-        // public static string AMY = "?"; // 
-        public static string ALB = "ASALB";
-        public static string CRE = "CRE";
-        public static string CL = "CL";
-        public static string P = "PHOS"; // 血清磷
-        public static string Na = "NA";
-        public static string CA = "CALA"; // 血清鈣
-        public static string K = "K"; // 血清鉀
-        public static string LITH = "LI"; // 血清鋰
-        public static string GLU = "GLU"; // 飯前血糖
-        public static string RA = "RF"; // 類風濕性關節炎
-        public static string HDLC = "HDL";
-        public static string ALP04 = "ALKP";
-        public static string GPT = "ALT"; // 
-        public static string GOT = "AST"; // 
-        public static string GGT19 = "GGT"; // 麩胺醯轉移脢
+        public static string ALB = "ALB";
+        public static string TBIL = "TBIL";
+        public static string ALKP = "ALKP";
+        public static string AST = "AST";
+        public static string ALT = "ALT";
+        public static string LDH = "LDH";
+        public static string GLU = "GLU";
+        public static string TRIG = "TRIG";
+        public static string HDL = "HDL";
+        public static string BUN = "BUN";
+        public static string CREA = "CREA";
+        public static string URIC = "URIC";
+        public static string GGT = "GGT";
+        public static string CHOL = "CHOL";
     }
 
     [Route("AU")]
@@ -48,7 +33,7 @@ namespace LIS_Middleware.Controllers
         // 這裡定義的是，Supabase 裡面對應的檢驗項目代碼 (test_code) test_code 必須要在這裡面有出現才會被 select 出來
         private static readonly string[] ExamineItems = new[]
         {
-            "CRPN", "TG-1", "ASLDH", "LDL-C", "U-TP", "U-CRE", "2PBUN", "SFUA", "UALB", "BID", "CHO", "BIT", "TP", "cpk1", "ASALB", "CRE", "CL", "PHOS" ,"NA", "CALA", "K", "LI", "GLU", "RF", "HDL", "ALKP", "ALT", "AST", "GGT"
+            "TP", "ALB", "TBIL", "ALKP", "AST", "ALT", "LDH", "GLU", "TRIG", "HDL", "BUN", "CREA", "URIC", "GGT", "CHOL"
         };
 
         // 反向字典：AU 代碼 → ItemID
@@ -56,36 +41,21 @@ namespace LIS_Middleware.Controllers
 
         Dictionary<string, string> AU_ExamineItems_Dic = new Dictionary<string, string>()
         {
-            { AU_ExamineItems.CRP, "018" },
-            { AU_ExamineItems.TRIG, "009" },
-            { AU_ExamineItems.LDH27, "023" },
-            { AU_ExamineItems.LDLC, "028" },
-            { AU_ExamineItems.UCSFP, "029" },
-            { AU_ExamineItems.UCRE, "017" },
-            { AU_ExamineItems.BUN, "013" },
-            { AU_ExamineItems.UA, "014" },
-            { AU_ExamineItems.MA, "030" },
-            { AU_ExamineItems.DBILB, "031" },
-            { AU_ExamineItems.CHOL, "008" },
+            { AU_ExamineItems.TP, "001" },
+            { AU_ExamineItems.ALB, "002" },
             { AU_ExamineItems.TBIL, "003" },
-            { AU_ExamineItems.TP, "015" },
-            { AU_ExamineItems.CK, "016" },
-            // { AU_ExamineItems.AMY, "005" },
-            { AU_ExamineItems.ALB, "001" },
-            { AU_ExamineItems.CRE, "017" },
-            { AU_ExamineItems.CL, "099" },
-            { AU_ExamineItems.P, "021" },
-            { AU_ExamineItems.Na, "097" },
-            { AU_ExamineItems.CA, "007" },
-            { AU_ExamineItems.K, "098" },
-            { AU_ExamineItems.LITH, "119" },
-            { AU_ExamineItems.GLU, "012" },
-            { AU_ExamineItems.RA, "026" },
-            { AU_ExamineItems.HDLC, "024" },
-            { AU_ExamineItems.ALP04, "002" },
-            { AU_ExamineItems.GPT, "010" },
-            { AU_ExamineItems.GOT, "011" },
-            { AU_ExamineItems.GGT19, "020" },
+            { AU_ExamineItems.ALKP, "007" },
+            { AU_ExamineItems.AST, "008" },
+            { AU_ExamineItems.ALT, "009" },
+            { AU_ExamineItems.LDH, "012" },
+            { AU_ExamineItems.GLU, "031" },
+            { AU_ExamineItems.TRIG, "016" },
+            { AU_ExamineItems.HDL, "017" },
+            { AU_ExamineItems.BUN, "020" },
+            { AU_ExamineItems.CREA, "021" },
+            { AU_ExamineItems.URIC, "022" },
+            { AU_ExamineItems.GGT, "014" },
+            { AU_ExamineItems.CHOL, "015" }
         };
 
         private readonly Supabase.Client _supabaseClient;
