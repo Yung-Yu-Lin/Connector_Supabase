@@ -16,3 +16,6 @@
 
 杏仁台南
 "DefaultUnitID": "c068f09e-fdbc-4739-b97f-df58f92ca813"
+
+屏東國仁
+"DefaultUnitID": "0b48a248-c4c7-48ff-b81a-b0d534c6d16e"
