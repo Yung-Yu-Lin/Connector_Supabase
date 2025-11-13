@@ -10,46 +10,18 @@ namespace LIS_Middleware.Controllers
 {
     public class DXI_ExamineItems
     {
-        public static string CA153 = "CA153";
-        public static string HCG5 = "B-HCG";
-        public static string LH = "LH";
-        public static string CA125 = "CA125";
-        public static string PSA = "PSA";
-        public static string PRL = "PRL";
-        public static string freePSA = "freePSA";
-        public static string FSH = "FSH";
-        public static string CEA = "CEA";
-        public static string TES = "TES";
-        public static string B12 = "B12";
-        public static string AFP = "AFP";
-        public static string INS2 = "INS2";
-        public static string CA199 = "CA199";
-        public static string FOL = "FOL";
-        public static string E2 = "E2";
+        public static string FRT4 = "FRT4";
+        public static string TSH3 = "TSH3";
     }
 
-    [Route("DXI")]
+    [Route("Access2")]
     public class BeckmanDXIController : Controller
     {
         // 這裡定義的是，Supabase 裡面對應的檢驗項目代碼 (test_code) test_code 必須要在這裡面有出現才會被 select 出來
         private static readonly string[] ExamineItems = new[]
         {
-            "CA153",
-            "B-HCG",
-            "LH",
-            "CA125",
-            "PSA",
-            "PRL",
-            "freePSA",
-            "FSH",
-            "CEA",
-            "TES",
-            "B12",
-            "AFP",
-            "INS2",
-            "CA199",
-            "FOL",
-            "E2"
+            "FRT4",
+            "TSH3",
         };
 
         // 反向字典：DXI 代碼 → ItemID
@@ -57,22 +29,8 @@ namespace LIS_Middleware.Controllers
 
         Dictionary<string, string> DXI_ExamineItems_Dic = new Dictionary<string, string>()
         {
-            { DXI_ExamineItems.CA153, "CA153" },
-            { DXI_ExamineItems.HCG5, "HCG5" },
-            { DXI_ExamineItems.LH, "Hlh" },
-            { DXI_ExamineItems.CA125, "OV125Ag" },
-            { DXI_ExamineItems.PSA, "PSA-Hyb" },
-            { DXI_ExamineItems.PRL, "PRL" },
-            { DXI_ExamineItems.freePSA, "freePSA" },
-            { DXI_ExamineItems.FSH, "hFSH" },
-            { DXI_ExamineItems.CEA, "CEA2" },
-            { DXI_ExamineItems.TES, "Testo" },
-            { DXI_ExamineItems.B12, "VitB12" },
-            { DXI_ExamineItems.AFP, "AFP" },
-            { DXI_ExamineItems.INS2, "Insulin" },
-            { DXI_ExamineItems.CA199, "GI19-9Ag" },
-            { DXI_ExamineItems.FOL, "FOLW" },
-            { DXI_ExamineItems.E2, "SNSE2" }
+            { DXI_ExamineItems.FRT4, "FRT4" },
+            { DXI_ExamineItems.TSH3, "TSH3" },
         };
 
         private readonly Supabase.Client _supabaseClient;

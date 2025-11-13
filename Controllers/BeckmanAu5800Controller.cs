@@ -298,8 +298,9 @@ namespace LIS_Middleware.Controllers
             var testResult = await _supabaseClient
                 .From<SpecimenTest>()
                 .Filter("specimen_id", Postgrest.Constants.Operator.Equals, specimenId)
-                .Filter("status", Postgrest.Constants.Operator.Equals, "pending") // 只撈出還沒被讀走的項目
-                .Filter("test_code", Postgrest.Constants.Operator.In, ExamineItems) // 只撈出符合的項目
+                .Filter("status", Postgrest.Constants.Operator.In, new[] { "pending", "processing" })
+                .Filter("result_value", Postgrest.Constants.Operator.Is, "null")
+                .Filter("test_code", Postgrest.Constants.Operator.In, ExamineItems)
                 .Get();
             
             var ordersList = testResult.Models.Select(test => new Orders
