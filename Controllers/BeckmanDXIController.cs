@@ -28,7 +28,7 @@ namespace LIS_Middleware.Controllers
         public static string E2 = "E2";
     }
 
-    [Route("DXI")]
+    [Route("Access2")]
     public class BeckmanDXIController : Controller
     {
         // 這裡定義的是，Supabase 裡面對應的檢驗項目代碼 (test_code) test_code 必須要在這裡面有出現才會被 select 出來

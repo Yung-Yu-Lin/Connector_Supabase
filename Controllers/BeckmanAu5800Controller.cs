@@ -61,7 +61,6 @@ namespace LIS_Middleware.Controllers
             { AU_ExamineItems.LDH27, "023" },
             { AU_ExamineItems.LDLC, "028" },
             { AU_ExamineItems.UCSFP, "029" },
-            { AU_ExamineItems.UCRE, "017" },
             { AU_ExamineItems.BUN, "013" },
             { AU_ExamineItems.UA, "014" },
             { AU_ExamineItems.MA, "030" },
