@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using LIS_Middleware.Models;
 using Microsoft.Extensions.Configuration;
+using LIS_Middleware.Middleware;
 
 namespace LIS_Middleware.Controllers
 {
@@ -260,6 +261,13 @@ namespace LIS_Middleware.Controllers
 
             // 抽出單位的ID
             var defaultUnitId = _configuration["Supabase:DefaultUnitID"];
+            
+            // 記錄 Supabase 查詢
+            SupabaseLogger.LogQuery("SELECT", "specimens", new { 
+                specimen_code = barcode, 
+                unit_id = defaultUnitId 
+            });
+            
             // 1. 先查 specimen
             var specimenResult = await _supabaseClient
                     .From<Specimen>()
@@ -268,6 +276,12 @@ namespace LIS_Middleware.Controllers
                     // .Filter("status", Postgrest.Constants.Operator.Equals, "received")
                     .Order("created_at", Postgrest.Constants.Ordering.Descending)
                     .Get();
+            
+            // 記錄查詢結果
+            SupabaseLogger.LogQuery("SELECT_RESULT", "specimens", null, new {
+                count = specimenResult.Models?.Count ?? 0,
+                first_specimen_id = specimenResult.Models?.FirstOrDefault()?.specimen_id
+            });
 
             // 狀態對照表
             // received=簽收
@@ -295,6 +309,15 @@ namespace LIS_Middleware.Controllers
 
             // 如果找到資料，則繼續
             var specimenId = specimen.specimen_id;
+            
+            // 記錄 Supabase 查詢
+            SupabaseLogger.LogQuery("SELECT", "specimen_tests", new {
+                specimen_id = specimenId,
+                status_in = new[] { "pending", "processing" },
+                result_value_is = "null",
+                test_code_in = ExamineItems
+            });
+            
             var testResult = await _supabaseClient
                 .From<SpecimenTest>()
                 .Filter("specimen_id", Postgrest.Constants.Operator.Equals, specimenId)
@@ -302,6 +325,12 @@ namespace LIS_Middleware.Controllers
                 .Filter("result_value", Postgrest.Constants.Operator.Is, "null")
                 .Filter("test_code", Postgrest.Constants.Operator.In, ExamineItems)
                 .Get();
+            
+            // 記錄查詢結果
+            SupabaseLogger.LogQuery("SELECT_RESULT", "specimen_tests", null, new {
+                count = testResult.Models?.Count ?? 0,
+                test_codes = testResult.Models?.Select(t => t.test_code).ToList()
+            });
             
             var ordersList = testResult.Models.Select(test => new Orders
             {

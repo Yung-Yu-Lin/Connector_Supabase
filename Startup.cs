@@ -12,6 +12,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using LIS_Middleware.DataDB;
+using LIS_Middleware.Middleware;
 
 namespace LIS_Middleware
 {
@@ -30,8 +31,15 @@ namespace LIS_Middleware
             // 註冊 Supabase Client
             var supabaseUrl = Configuration["Supabase:Url"];
             var supabaseKey = Configuration["Supabase:ApiKey"];
-            var supabaseClient = new Supabase.Client(supabaseUrl, supabaseKey);
+            
+            var options = new Supabase.SupabaseOptions
+            {
+                AutoConnectRealtime = false
+            };
+            
+            var supabaseClient = new Supabase.Client(supabaseUrl, supabaseKey, options);
             supabaseClient.InitializeAsync().Wait();
+            
             services.AddSingleton(supabaseClient);
             services.AddControllers();
         }
@@ -48,6 +56,9 @@ namespace LIS_Middleware
             {
                 app.UseHttpsRedirection();
             }
+
+            // 加入 Request/Response 記錄 Middleware
+            app.UseMiddleware<RequestResponseLoggingMiddleware>();
 
             app.UseRouting();
 
