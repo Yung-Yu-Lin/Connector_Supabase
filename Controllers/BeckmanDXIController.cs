@@ -59,7 +59,7 @@ namespace LIS_Middleware.Controllers
         {
             { DXI_ExamineItems.CA153, "CA153" },
             { DXI_ExamineItems.HCG5, "HCG5" },
-            { DXI_ExamineItems.LH, "Hlh" },
+            { DXI_ExamineItems.LH, "hLH" },
             { DXI_ExamineItems.CA125, "OV125Ag" },
             { DXI_ExamineItems.PSA, "PSA-Hyb" },
             { DXI_ExamineItems.PRL, "PRL" },
