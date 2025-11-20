@@ -19,11 +19,11 @@ namespace LIS_Middleware.Controllers
         public static string ALT = "ALT";
         public static string LDH = "LDH";
         public static string GLU = "GLU";
-        public static string TRIG = "TRIG";
+        public static string TRIG = "TG";
         public static string HDL = "HDL";
         public static string BUN = "BUN";
-        public static string CREA = "CREA";
-        public static string URIC = "URIC";
+        public static string CREA = "CRE";
+        public static string URIC = "UA";
         public static string GGT = "GGT";
         public static string CHOL = "CHOL";
     }
@@ -34,7 +34,7 @@ namespace LIS_Middleware.Controllers
         // 這裡定義的是，Supabase 裡面對應的檢驗項目代碼 (test_code) test_code 必須要在這裡面有出現才會被 select 出來
         private static readonly string[] ExamineItems = new[]
         {
-            "TP", "ALB", "TBIL", "ALKP", "AST", "ALT", "LDH", "GLU", "TRIG", "HDL", "BUN", "CREA", "URIC", "GGT", "CHOL"
+            "TP", "ALB", "TBIL", "ALKP", "AST", "ALT", "LDH", "GLU", "TG", "HDL", "BUN", "CRE", "UA", "GGT", "CHOL"
         };
 
         // 反向字典：AU 代碼 → ItemID

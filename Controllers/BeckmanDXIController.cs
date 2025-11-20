@@ -10,8 +10,8 @@ namespace LIS_Middleware.Controllers
 {
     public class DXI_ExamineItems
     {
-        public static string FRT4 = "FRT4";
-        public static string TSH3 = "TSH3";
+        public static string FRT4 = "FT4";
+        public static string TSH3 = "TSH";
     }
 
     [Route("Access2")]
@@ -20,8 +20,8 @@ namespace LIS_Middleware.Controllers
         // 這裡定義的是，Supabase 裡面對應的檢驗項目代碼 (test_code) test_code 必須要在這裡面有出現才會被 select 出來
         private static readonly string[] ExamineItems = new[]
         {
-            "FRT4",
-            "TSH3",
+            "FT4",
+            "TSH",
         };
 
         // 反向字典：DXI 代碼 → ItemID
