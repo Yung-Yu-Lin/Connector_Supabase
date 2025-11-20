@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace LIS_Middleware.Controllers
 {
+    // 跟 Supbabase 裡面的檢驗項目對應的代碼
     public class DXI_ExamineItems
     {
         public static string FRT4 = "FT4";
@@ -18,6 +19,7 @@ namespace LIS_Middleware.Controllers
     public class BeckmanDXIController : Controller
     {
         // 這裡定義的是，Supabase 裡面對應的檢驗項目代碼 (test_code) test_code 必須要在這裡面有出現才會被 select 出來
+        // 跟 Supbabase 裡面的檢驗項目對應的代碼
         private static readonly string[] ExamineItems = new[]
         {
             "FT4",
