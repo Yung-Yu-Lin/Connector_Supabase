@@ -57,7 +57,7 @@ namespace LIS_Middleware.Controllers
 
         Dictionary<string, string> DXI_ExamineItems_Dic = new Dictionary<string, string>()
         {
-            { DXI_ExamineItems.CA153, "CA153" },
+            { DXI_ExamineItems.CA153, "BR15-3Ag" },
             { DXI_ExamineItems.HCG5, "HCG5" },
             { DXI_ExamineItems.LH, "hLH" },
             { DXI_ExamineItems.CA125, "OV125Ag" },

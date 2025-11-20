@@ -19,7 +19,7 @@ namespace LIS_Middleware.Controllers
         public static string BUN = "2PBUN";
         public static string UA = "SFUA";
         public static string MA = "UALB"; // 微白蛋白
-        public static string DBILB = "BID";
+        public static string DBILB = "BID"; // 直接膽紅素
         public static string CHOL = "CHO";
         public static string TBIL = "BIT";
         public static string TP = "TP";
@@ -64,7 +64,7 @@ namespace LIS_Middleware.Controllers
             { AU_ExamineItems.BUN, "013" },
             { AU_ExamineItems.UA, "014" },
             { AU_ExamineItems.MA, "030" },
-            { AU_ExamineItems.DBILB, "031" },
+            { AU_ExamineItems.DBILB, "004" },
             { AU_ExamineItems.CHOL, "008" },
             { AU_ExamineItems.TBIL, "003" },
             { AU_ExamineItems.TP, "015" },
