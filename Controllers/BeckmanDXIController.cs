@@ -202,13 +202,19 @@ namespace LIS_Middleware.Controllers
             decimal resultValue = 0;
             decimal.TryParse(qcItems.ItemsResult, out resultValue);
 
+            DateTime resultDate;
+            if (!DateTime.TryParseExact(qcItems.ResultDate, "yyyyMMddHHmmss", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out resultDate))
+            {
+                resultDate = DateTime.Now;
+            }
+
             var qcData = new QcData
             {
                 id = Guid.NewGuid(),
                 qc_item_id = qcTargets.qc_item_id,
                 lot_id = qcTargets.lot_id,
                 value = resultValue,
-                test_date = DateTime.Now,
+                test_date = resultDate,
                 instrument_id = qcTargets.instrument_id,
                 status = "pending",
                 created_at = DateTime.Now,
