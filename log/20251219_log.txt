@@ -1,0 +1,9 @@
+[2025-12-19 11:47:41] REQUEST - /AU/healthcheck
+Method: GET
+Endpoint: /AU/healthcheck
+Request Body: N/A
+RESPONSE - Status: True, Message: HealthCheck OK
+Response Time: 2025-12-19 11:47:42
+Duration: 975.66ms
+Response Data: {"timestamp":"2025-12-19 11:47:42","status":"connected"}
+--------------------------------------------------------------------------------

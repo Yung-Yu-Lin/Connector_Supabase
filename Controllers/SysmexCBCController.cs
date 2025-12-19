@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
@@ -87,10 +88,46 @@ namespace LIS_Middleware.Controllers
             _configuration = configuration;
         }
 
+        // 日誌記錄輔助方法
+        private void LogApiCall(string endpoint, string method, object requestBody, object responseData, bool success, string message, DateTime startTime)
+        {
+            try
+            {
+                var logDirectory = Path.Combine(Directory.GetCurrentDirectory(), "log");
+                var logFileName = $"{startTime:yyyyMMdd}_log.txt";
+                var logFilePath = Path.Combine(logDirectory, logFileName);
+                
+                if (!Directory.Exists(logDirectory))
+                {
+                    Directory.CreateDirectory(logDirectory);
+                }
+                
+                var endTime = DateTime.Now;
+                var duration = (endTime - startTime).TotalMilliseconds;
+                
+                var logEntry = $"[{startTime:yyyy-MM-dd HH:mm:ss}] REQUEST - {endpoint}" + Environment.NewLine;
+                logEntry += $"Method: {method}" + Environment.NewLine;
+                logEntry += $"Endpoint: {endpoint}" + Environment.NewLine;
+                logEntry += $"Request Body: {(requestBody != null ? System.Text.Json.JsonSerializer.Serialize(requestBody) : "N/A")}" + Environment.NewLine;
+                logEntry += $"RESPONSE - Status: {success}, Message: {message}" + Environment.NewLine;
+                logEntry += $"Response Time: {endTime:yyyy-MM-dd HH:mm:ss}" + Environment.NewLine;
+                logEntry += $"Duration: {duration}ms" + Environment.NewLine;
+                logEntry += $"Response Data: {(responseData != null ? System.Text.Json.JsonSerializer.Serialize(responseData) : "null")}" + Environment.NewLine;
+                logEntry += new string('-', 80) + Environment.NewLine;
+                
+                System.IO.File.AppendAllText(logFilePath, logEntry);
+            }
+            catch
+            {
+                // 日誌失敗不影響主流程
+            }
+        }
+
         // GET SysmexCBC/getItems/{barcode}
         [HttpGet("getItems/{barcode}")]
         public async Task<IActionResult> GetSpecimenByBarcode(string barcode)
         {
+            var startTime = DateTime.Now;
             var response = new Response();
             var defaultUnitId = _configuration["Supabase:DefaultUnitID"];
 
@@ -143,6 +180,7 @@ namespace LIS_Middleware.Controllers
             response.success = true;
             response.data = ordersList;
             response.message = "查詢成功";
+            LogApiCall($"/SysmexCBC/getItems/{barcode}", "GET", new { barcode }, response.data, response.success, response.message, startTime);
             return Ok(response);
         }
 
@@ -150,6 +188,7 @@ namespace LIS_Middleware.Controllers
         [HttpPost("setItemsQueried")]
         public async Task<IActionResult> SetItemsQueried([FromBody] List<Orders> orders)
         {
+            var startTime = DateTime.Now;
             var response = new Response();
             var defaultUnitId = _configuration["Supabase:DefaultUnitID"];
             var tasks = new List<Task>();
@@ -189,6 +228,7 @@ namespace LIS_Middleware.Controllers
             await Task.WhenAll(tasks);
             response.success = true;
             response.message = "批次更新完成";
+            LogApiCall("/SysmexCBC/setItemsQueried", "POST", orders, null, response.success, response.message, startTime);
             return Ok(response);
         }
 
@@ -196,6 +236,7 @@ namespace LIS_Middleware.Controllers
         [HttpPost("setItemsResult")]
         public async Task<IActionResult> SetItemsResult([FromBody] OrderItems orderItems)
         {
+            var startTime = DateTime.Now;
             var response = new Response();
             var defaultUnitId = _configuration["Supabase:DefaultUnitID"];
 
@@ -260,6 +301,7 @@ namespace LIS_Middleware.Controllers
 
             response.success = true;
             response.message = "更新檢驗項目成功";
+            LogApiCall("/SysmexCBC/setItemsResult", "POST", orderItems, null, response.success, response.message, startTime);
             return Ok(response);
         }
     }
