@@ -559,7 +559,16 @@ namespace LIS_Middleware.Controllers
             specimenTest.Flag = orderItems.ItemsFlag;
             specimenTest.rack_number = orderItems.RackNumber;
             specimenTest.cup_number = orderItems.CupNumber;
-            specimenTest.status = "completed"; // 預設更新為 completed
+            // 2025/12/30 增加條件，如果 orderItems.ItemsResult 是空字串，或者是非數字的結果，就要讓 status 保持為 processing
+            decimal tempValue;
+            if (string.IsNullOrEmpty(orderItems.ItemsResult) || !decimal.TryParse(orderItems.ItemsResult, out tempValue))
+            {
+                specimenTest.status = "processing"; // 保持為 processing
+            }
+            else 
+            {
+                specimenTest.status = "completed"; // 預設更新為 completed
+            }
 
             var updateTestResp = await _supabaseClient
                 .From<SpecimenTest>()
