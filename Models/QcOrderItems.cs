@@ -13,5 +13,6 @@ namespace LIS_Middleware.Models
         public string CupNumber { get; set; }
         public string Level { get; set; }
         public string Cuvette { get; set; }
+        public string TestDate { get; set; }
     }
 }
