@@ -225,13 +225,23 @@ namespace LIS_Middleware.Controllers
             decimal resultValue = 0;
             decimal.TryParse(qcItems.ItemsResult, out resultValue);
 
+            // 解析 ResultDate，如果為空或解析失敗則使用 DateTime.Now
+            DateTime testDate = DateTime.Now;
+            if (!string.IsNullOrEmpty(qcItems.ResultDate))
+            {
+                DateTime.TryParseExact(qcItems.ResultDate, "yyyy/MM/dd HH:mm:ss", 
+                    System.Globalization.CultureInfo.InvariantCulture, 
+                    System.Globalization.DateTimeStyles.None, 
+                    out testDate);
+            }
+
             var qcData = new QcData
             {
                 id = Guid.NewGuid(),
                 qc_item_id = qcTargets.qc_item_id,
                 lot_id = qcTargets.lot_id,
                 value = resultValue,
-                test_date = DateTime.Now,
+                test_date = testDate,
                 instrument_id = qcTargets.instrument_id,
                 status = "pending",
                 created_at = DateTime.Now,

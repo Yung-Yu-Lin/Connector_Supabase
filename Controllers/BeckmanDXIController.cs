@@ -202,10 +202,14 @@ namespace LIS_Middleware.Controllers
             decimal resultValue = 0;
             decimal.TryParse(qcItems.ItemsResult, out resultValue);
 
-            DateTime resultDate;
-            if (!DateTime.TryParseExact(qcItems.ResultDate, "yyyyMMddHHmmss", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out resultDate))
+            // 解析 ResultDate，如果為空或解析失敗則使用 DateTime.Now
+            DateTime resultDate = DateTime.Now;
+            if (!string.IsNullOrEmpty(qcItems.ResultDate))
             {
-                resultDate = DateTime.Now;
+                DateTime.TryParseExact(qcItems.ResultDate, "yyyy/MM/dd HH:mm:ss", 
+                    System.Globalization.CultureInfo.InvariantCulture, 
+                    System.Globalization.DateTimeStyles.None, 
+                    out resultDate);
             }
 
             var qcData = new QcData
