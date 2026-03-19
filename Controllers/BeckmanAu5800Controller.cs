@@ -26,6 +26,7 @@ namespace LIS_Middleware.Controllers
         public static string URIC = "UA";
         public static string GGT = "GGT";
         public static string CHOL = "CHOL";
+        public static string LDL = "LDL";
     }
 
     [Route("AU")]
@@ -34,7 +35,7 @@ namespace LIS_Middleware.Controllers
         // 這裡定義的是，Supabase 裡面對應的檢驗項目代碼 (test_code) test_code 必須要在這裡面有出現才會被 select 出來
         private static readonly string[] ExamineItems = new[]
         {
-            "TP", "ALB", "TBIL", "ALKP", "AST", "ALT", "LDH", "GLU", "TG", "HDL", "BUN", "CRE", "UA", "GGT", "CHOL"
+            "TP", "ALB", "TBIL", "ALKP", "AST", "ALT", "LDH", "GLU", "TG", "HDL", "BUN", "CRE", "UA", "GGT", "CHOL", "LDL"
         };
 
         // 反向字典：AU 代碼 → ItemID
@@ -56,7 +57,8 @@ namespace LIS_Middleware.Controllers
             { AU_ExamineItems.CREA, "021" },
             { AU_ExamineItems.URIC, "022" },
             { AU_ExamineItems.GGT, "014" },
-            { AU_ExamineItems.CHOL, "015" }
+            { AU_ExamineItems.CHOL, "015" },
+            { AU_ExamineItems.LDL, "018" }
         };
 
         private readonly Supabase.Client _supabaseClient;
@@ -195,6 +197,7 @@ namespace LIS_Middleware.Controllers
                 .Filter("instrument_id", Postgrest.Constants.Operator.Equals, qcItems.InstrumentID)
                 .Filter("unit_id", Postgrest.Constants.Operator.Equals, defaultUnitId)
                 .Filter("qc_number", Postgrest.Constants.Operator.Equals, convertedItemsCode)
+                .Filter("active", Postgrest.Constants.Operator.Equals, "true")
                 .Filter("qc_barcode", Postgrest.Constants.Operator.Equals, qcItems.BarCode)
                 .Get();
 
