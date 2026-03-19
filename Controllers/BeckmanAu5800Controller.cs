@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
@@ -96,11 +97,47 @@ namespace LIS_Middleware.Controllers
             _configuration = configuration;
         }
 
+        // 日誌記錄輔助方法
+        private void LogApiCall(string endpoint, string method, object requestBody, object responseData, bool success, string message, DateTime startTime)
+        {
+            try
+            {
+                var logDirectory = Path.Combine(Directory.GetCurrentDirectory(), "log");
+                var logFileName = $"{startTime:yyyyMMdd}_log.txt";
+                var logFilePath = Path.Combine(logDirectory, logFileName);
+                
+                if (!Directory.Exists(logDirectory))
+                {
+                    Directory.CreateDirectory(logDirectory);
+                }
+                
+                var endTime = DateTime.Now;
+                var duration = (endTime - startTime).TotalMilliseconds;
+                
+                var logEntry = $"[{startTime:yyyy-MM-dd HH:mm:ss}] REQUEST - {endpoint}" + Environment.NewLine;
+                logEntry += $"Method: {method}" + Environment.NewLine;
+                logEntry += $"Endpoint: {endpoint}" + Environment.NewLine;
+                logEntry += $"Request Body: {(requestBody != null ? System.Text.Json.JsonSerializer.Serialize(requestBody) : "N/A")}" + Environment.NewLine;
+                logEntry += $"RESPONSE - Status: {success}, Message: {message}" + Environment.NewLine;
+                logEntry += $"Response Time: {endTime:yyyy-MM-dd HH:mm:ss}" + Environment.NewLine;
+                logEntry += $"Duration: {duration}ms" + Environment.NewLine;
+                logEntry += $"Response Data: {(responseData != null ? System.Text.Json.JsonSerializer.Serialize(responseData) : "null")}" + Environment.NewLine;
+                logEntry += new string('-', 80) + Environment.NewLine;
+                
+                System.IO.File.AppendAllText(logFilePath, logEntry);
+            }
+            catch
+            {
+                // 日誌失敗不影響主流程
+            }
+        }
+
         // 讀取 QC 檢體檢驗項目
         // Get AU/getQcTargets/{instrumentId}/{barcode}
         [HttpGet("getQcTargets/{instrumentId}/{barcode}")]
         public async Task<IActionResult> GetQcTargets(string instrumentId, string barcode)
         {
+            var startTime = DateTime.Now;
             Response response = new Response();
 
             // 抽出單位的ID
@@ -111,6 +148,7 @@ namespace LIS_Middleware.Controllers
                 response.success = false;
                 response.data = null;
                 response.message = "instrumentId 或 defaultUnitId 不可為空";
+                LogApiCall($"/AU/getQcTargets/{instrumentId}/{barcode}", "GET", new { instrumentId, barcode }, response.data, response.success, response.message, startTime);
                 return BadRequest(response);
             }
 
@@ -121,6 +159,7 @@ namespace LIS_Middleware.Controllers
                 response.success = false;
                 response.data = null;
                 response.message = "instrumentId 或 defaultUnitId 格式錯誤 (必須為 uuid)";
+                LogApiCall($"/AU/getQcTargets/{instrumentId}/{barcode}", "GET", new { instrumentId, barcode }, response.data, response.success, response.message, startTime);
                 return BadRequest(response);
             }
 
@@ -144,6 +183,7 @@ namespace LIS_Middleware.Controllers
                 response.success = false;
                 response.data = null;
                 response.message = "查無QC資料";
+                LogApiCall($"/AU/getQcTargets/{instrumentId}/{barcode}", "GET", new { instrumentId, barcode }, response.data, response.success, response.message, startTime);
                 return NotFound(response);
             }
 
@@ -161,6 +201,7 @@ namespace LIS_Middleware.Controllers
             response.success = true;
             response.data = ordersList;
             response.message = "查詢QC成功";
+            LogApiCall($"/AU/getQcTargets/{instrumentId}/{barcode}", "GET", new { instrumentId, barcode }, response.data, response.success, response.message, startTime);
             return Ok(response);
         }
 
@@ -169,6 +210,7 @@ namespace LIS_Middleware.Controllers
         [HttpPost("setQcItemsQueried")]
         public async Task<IActionResult> SetQcItemsQueried([FromBody] List<Orders> orders)
         {
+            var startTime = DateTime.Now;
             Response response = new Response();
             var defaultUnitId = _configuration["Supabase:DefaultUnitID"];
             var updateTasks = new List<Task>();
@@ -200,6 +242,7 @@ namespace LIS_Middleware.Controllers
             await Task.WhenAll(updateTasks);
             response.success = true;
             response.message = "更新QC檢驗項目狀態成功";
+            LogApiCall("/AU/setQcItemsQueried", "POST", orders, response.data, response.success, response.message, startTime);
             return Ok(response);
         }
 
@@ -207,6 +250,7 @@ namespace LIS_Middleware.Controllers
         [HttpPost("setQcItemsResult")]
         public async Task<IActionResult> SetQcItemsResult([FromBody] QcOrderItems qcItems)
         {
+            var startTime = DateTime.Now;
             Response response = new Response();
 
             // 抽出單位的ID
@@ -240,6 +284,7 @@ namespace LIS_Middleware.Controllers
                 response.success = false;
                 response.data = null;
                 response.message = "QC目標資料欄位為空";
+                LogApiCall("/AU/setQcItemsResult", "POST", qcItems, response.data, response.success, response.message, startTime);
                 return BadRequest(response);
             }
             if (qcItems.BarCode == null || qcItems.ItemsCode == null || qcItems.ItemsResult == null)
@@ -247,6 +292,7 @@ namespace LIS_Middleware.Controllers
                 response.success = false;
                 response.data = null;
                 response.message = "QC檢體資料欄位為空";
+                LogApiCall("/AU/setQcItemsResult", "POST", qcItems, response.data, response.success, response.message, startTime);
                 return BadRequest(response);
             }
 
@@ -286,6 +332,7 @@ namespace LIS_Middleware.Controllers
 
             response.success = true;
             response.message = "寫入QC檢驗結果成功";
+            LogApiCall("/AU/setQcItemsResult", "POST", qcItems, response.data, response.success, response.message, startTime);
             return Ok(response);
         }
 
@@ -295,6 +342,7 @@ namespace LIS_Middleware.Controllers
         [HttpGet("getItems/{barcode}")]
         public async Task<IActionResult> GetSpecimenByBarcode(string barcode)
         {
+            var startTime = DateTime.Now;
             Response response = new Response();
 
             // 抽出單位的ID
@@ -323,6 +371,7 @@ namespace LIS_Middleware.Controllers
                 response.success = false;
                 response.data = null;
                 response.message = "查無資料";
+                LogApiCall($"/AU/getItems/{barcode}", "GET", new { barcode }, response.data, response.success, response.message, startTime);
                 return NotFound(response);
             }
             // if (specimen.status != "received") {
@@ -355,6 +404,7 @@ namespace LIS_Middleware.Controllers
             response.success = true;
             response.data = ordersList;
             response.message = "查詢成功";
+            LogApiCall($"/AU/getItems/{barcode}", "GET", new { barcode }, response.data, response.success, response.message, startTime);
             return Ok(response);
         }
 
@@ -363,6 +413,7 @@ namespace LIS_Middleware.Controllers
         [HttpPost("setItemsQueried")]
         public async Task<IActionResult> setItemsQueried([FromBody] List<Orders> orders)
         {
+            var startTime = DateTime.Now;
             Response response = new Response();
             var defaultUnitId = _configuration["Supabase:DefaultUnitID"];
             var updateTasks = new List<Task>();
@@ -407,6 +458,7 @@ namespace LIS_Middleware.Controllers
             response.success = true;
             response.message = "批次更新完成";
             response.data = null;
+            LogApiCall("/AU/setItemsQueried", "POST", orders, response.data, response.success, response.message, startTime);
             return Ok(response);
         }
 
@@ -421,6 +473,7 @@ namespace LIS_Middleware.Controllers
         [HttpGet("updateStatus/{barcode}/{status}")]
         public async Task<IActionResult> UpdateSpecimenStatus(string barcode, string status)
         {
+            var startTime = DateTime.Now;
             Response response = new Response();
 
             var defaultUnitId = _configuration["Supabase:DefaultUnitID"];
@@ -447,6 +500,7 @@ namespace LIS_Middleware.Controllers
             response.success = true;
             response.data = null;
             response.message = "更新醫令狀態成功";
+            LogApiCall($"/AU/updateStatus/{barcode}/{status}", "GET", new { barcode, status }, response.data, response.success, response.message, startTime);
             return Ok(response);
         }
 
@@ -454,6 +508,7 @@ namespace LIS_Middleware.Controllers
         [HttpPost("setItemsResult")]
         public async Task<IActionResult> UpdateSpecimenTestResult([FromBody] OrderItems orderItems)
         {
+            var startTime = DateTime.Now;
             Response response = new Response();
 
             var defaultUnitId = _configuration["Supabase:DefaultUnitID"];
@@ -469,6 +524,7 @@ namespace LIS_Middleware.Controllers
                 response.success = false;
                 response.data = null;
                 response.message = "查無醫令資料";
+                LogApiCall("/AU/setItemsResult", "POST", orderItems, response.data, response.success, response.message, startTime);
                 return NotFound(response);
             }
 
@@ -491,6 +547,7 @@ namespace LIS_Middleware.Controllers
                 response.success = false;
                 response.data = null;
                 response.message = "查無檢驗項目資料";
+                LogApiCall("/AU/setItemsResult", "POST", orderItems, response.data, response.success, response.message, startTime);
                 return NotFound(response);
             }
             specimenTest.result_value = orderItems.ItemsResult;
@@ -507,7 +564,47 @@ namespace LIS_Middleware.Controllers
             response.success = true;
             response.data = null;
             response.message = "更新檢驗項目成功";
+            LogApiCall("/AU/setItemsResult", "POST", orderItems, response.data, response.success, response.message, startTime);
             return Ok(response);
+        }
+
+        // HealthCheck API - 用於保持 Supabase 連線活躍，避免 cold start
+        [HttpGet("healthcheck")]
+        public async Task<IActionResult> HealthCheck()
+        {
+            var startTime = DateTime.Now;
+            Response response = new Response();
+            
+            try
+            {
+                var defaultUnitId = _configuration["Supabase:DefaultUnitID"];
+                
+                // 執行一個簡單的查詢來保持連線活躍
+                var result = await _supabaseClient
+                    .From<Specimen>()
+                    .Filter("unit_id", Postgrest.Constants.Operator.Equals, defaultUnitId)
+                    .Limit(1)
+                    .Get();
+                
+                response.success = true;
+                response.message = "HealthCheck OK";
+                response.data = new { 
+                    timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
+                    status = "connected"
+                };
+                
+                LogApiCall("/AU/healthcheck", "GET", null, response.data, response.success, response.message, startTime);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                response.success = false;
+                response.message = $"HealthCheck Failed: {ex.Message}";
+                response.data = null;
+                
+                LogApiCall("/AU/healthcheck", "GET", null, response.data, response.success, response.message, startTime);
+                return StatusCode(500, response);
+            }
         }
 
         public class UpdateStatusRequest
