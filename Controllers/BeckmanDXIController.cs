@@ -173,6 +173,7 @@ namespace LIS_Middleware.Controllers
                 .Filter("unit_id", Postgrest.Constants.Operator.Equals, defaultUnitId)
                 .Filter("qc_number", Postgrest.Constants.Operator.Equals, convertedItemsCode)
                 .Filter("qc_barcode", Postgrest.Constants.Operator.Equals, qcItems.BarCode)
+                .Filter("active", Postgrest.Constants.Operator.Equals, "true")
                 .Get();
 
             var qcTargets = qcTargetsResult.Models.FirstOrDefault();
